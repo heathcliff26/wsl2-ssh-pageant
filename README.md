@@ -1,5 +1,6 @@
-:warning: I no longer own a Windows PC, so this project has been needless for me. 
-For this reason i will archive this project. :warning:
+The original project is https://github.com/BlackReloaded/wsl2-ssh-pageant. I only picked it up since it had been archived, but i still want to use it.
+
+All credit goes to the original author https://github.com/BlackReloaded.
 
 # wsl2-ssh-pageant
 
