@@ -59,7 +59,9 @@ func queryPageant(buf []byte) (result []byte, err error) {
 		return
 	}
 
-	hwnd := win.FindWindow(syscall.StringToUTF16Ptr("Pageant"), syscall.StringToUTF16Ptr("Pageant"))
+	// Static string, should not return any error
+	pageantPtr, _ := syscall.UTF16PtrFromString("Pageant")
+	hwnd := win.FindWindow(pageantPtr, pageantPtr)
 
 	// Launch gpg-connect-agent
 	if hwnd == 0 {
@@ -67,17 +69,20 @@ func queryPageant(buf []byte) (result []byte, err error) {
 		exec.Command("gpg-connect-agent", "/bye").Run()
 	}
 
-	hwnd = win.FindWindow(syscall.StringToUTF16Ptr("Pageant"), syscall.StringToUTF16Ptr("Pageant"))
+	hwnd = win.FindWindow(pageantPtr, pageantPtr)
 	if hwnd == 0 {
 		err = errors.New("Could not find Pageant window")
 		return
 	}
 
 	// Adding process id in order to support parrallel requests.
-	requestName := "WSLPageantRequest" + strconv.Itoa(os.Getpid())
-	mapName := fmt.Sprintf(requestName)
+	mapName := "WSLPageantRequest" + strconv.Itoa(os.Getpid())
+	mapNamePtr, err := syscall.UTF16PtrFromString(mapName)
+	if err != nil {
+		return
+	}
 
-	fileMap, err := windows.CreateFileMapping(invalidHandleValue, nil, pageReadWrite, 0, agentMaxMessageLength, syscall.StringToUTF16Ptr(mapName))
+	fileMap, err := windows.CreateFileMapping(invalidHandleValue, nil, pageReadWrite, 0, agentMaxMessageLength, mapNamePtr)
 	if err != nil {
 		return
 	}
@@ -171,7 +176,19 @@ func handleGPG(path string) {
 
 	reader := bufio.NewReader(file)
 	tmp, _, err := reader.ReadLine()
+	if err != nil {
+		if *verbose {
+			log.Printf("Could not read port from gpg nonce: %v\n", err)
+		}
+		return
+	}
 	port, err = strconv.Atoi(string(tmp))
+	if err != nil {
+		if *verbose {
+			log.Printf("Could not read port from gpg nonce: %v\n", err)
+		}
+		return
+	}
 	n, err := reader.Read(nonce[:])
 	if err != nil {
 		if *verbose {
