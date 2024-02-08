@@ -18,7 +18,6 @@ import (
 	"unsafe"
 
 	"github.com/Microsoft/go-winio"
-	"github.com/apenwarr/fixconsole"
 	"github.com/lxn/win"
 	"golang.org/x/sys/windows"
 )
@@ -130,7 +129,6 @@ func queryPageant(buf []byte) (result []byte, err error) {
 }
 
 func main() {
-	fixconsole.FixConsoleIfNeeded()
 	flag.Parse()
 
 	if *verbose {
