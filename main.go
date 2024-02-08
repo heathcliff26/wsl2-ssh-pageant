@@ -65,7 +65,11 @@ func queryPageant(buf []byte) (result []byte, err error) {
 	// Launch gpg-connect-agent
 	if hwnd == 0 {
 		log.Println("launching gpg-connect-agent")
-		exec.Command("gpg-connect-agent", "/bye").Run()
+		err = exec.Command("gpg-connect-agent", "/bye").Run()
+		if err != nil {
+			log.Println("Failed to launch gpg-connect-agent")
+			return
+		}
 	}
 
 	hwnd = win.FindWindow(pageantPtr, pageantPtr)
@@ -86,14 +90,16 @@ func queryPageant(buf []byte) (result []byte, err error) {
 		return
 	}
 	defer func() {
-		windows.CloseHandle(fileMap)
+		_ = windows.CloseHandle(fileMap)
 	}()
 
 	sharedMemory, err := windows.MapViewOfFile(fileMap, fileMapWrite, 0, 0, 0)
 	if err != nil {
 		return
 	}
-	defer windows.UnmapViewOfFile(sharedMemory)
+	defer func() {
+		_ = windows.UnmapViewOfFile(sharedMemory)
+	}()
 
 	sharedMemoryArray := (*[agentMaxMessageLength]byte)(unsafe.Pointer(sharedMemory))
 	copy(sharedMemoryArray[:], buf)
