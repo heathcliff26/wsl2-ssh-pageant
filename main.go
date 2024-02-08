@@ -12,7 +12,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"reflect"
 	"strconv"
 	"syscall"
 	"unsafe"
@@ -110,8 +109,8 @@ func queryPageant(buf []byte) (result []byte, err error) {
 	// data and the length directly
 	cds := copyDataStruct{
 		dwData: agentCopyDataID,
-		cbData: uint32(((*reflect.StringHeader)(unsafe.Pointer(&mapNameWithNul))).Len),
-		lpData: ((*reflect.StringHeader)(unsafe.Pointer(&mapNameWithNul))).Data,
+		cbData: uint32(len(mapNameWithNul)),
+		lpData: uintptr(unsafe.Pointer(unsafe.StringData(mapNameWithNul))),
 	}
 
 	ret := win.SendMessage(hwnd, win.WM_COPYDATA, 0, uintptr(unsafe.Pointer(&cds)))
