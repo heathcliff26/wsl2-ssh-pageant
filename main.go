@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"encoding/binary"
-	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -53,7 +52,7 @@ type copyDataStruct struct {
 
 func queryPageant(buf []byte) (result []byte, err error) {
 	if len(buf) > agentMaxMessageLength {
-		err = errors.New("Message too long")
+		err = NewErrMessageLength(len(buf))
 		return
 	}
 
@@ -73,7 +72,7 @@ func queryPageant(buf []byte) (result []byte, err error) {
 
 	hwnd = win.FindWindow(pageantPtr, pageantPtr)
 	if hwnd == 0 {
-		err = errors.New("Could not find Pageant window")
+		err = NewErrNoPageant()
 		return
 	}
 
@@ -116,7 +115,7 @@ func queryPageant(buf []byte) (result []byte, err error) {
 
 	ret := win.SendMessage(hwnd, win.WM_COPYDATA, 0, uintptr(unsafe.Pointer(&cds)))
 	if ret == 0 {
-		err = errors.New("WM_COPYDATA failed")
+		err = NewErrWMCopydata()
 		return
 	}
 
@@ -124,7 +123,7 @@ func queryPageant(buf []byte) (result []byte, err error) {
 	len += 4
 
 	if len > agentMaxMessageLength {
-		err = errors.New("Return message too long")
+		err = NewErrMessageLength(int(len))
 		return
 	}
 
