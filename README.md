@@ -15,11 +15,11 @@ In order to use `wsl-ssh-pageant` you must have installed `socat` and `ss` on yo
 For example, on Ubuntu you can install these by running: `sudo apt install socat iproute2`
 
 ### Installation
-1. Download latest version from [release page](https://github.com/BlackReloaded/wsl2-ssh-pageant/releases/latest) and copy `wsl2-ssh-pageant.exe` to your windows home directory (or other location within the windows file system). Then simlink to your `$HOME/.ssh` directory for easy access
+1. Download latest version from [release page](https://github.com/heathcliff26/wsl2-ssh-pageant/releases/latest) and copy `wsl2-ssh-pageant.exe` to your windows home directory (or other location within the windows file system). Then simlink to your `$HOME/.ssh` directory for easy access
     ```bash
     windows_destination="/mnt/c/Users/Public/Downloads/wsl2-ssh-pageant.exe"
     linux_destination="$HOME/.ssh/wsl2-ssh-pageant.exe"
-    wget -O "$windows_destination" "https://github.com/BlackReloaded/wsl2-ssh-pageant/releases/latest/download/wsl2-ssh-pageant.exe"
+    wget -O "$windows_destination" "https://github.com/heathcliff26/wsl2-ssh-pageant/releases/latest/download/wsl2-ssh-pageant.exe"
     # Set the executable bit.
     chmod +x "$windows_destination"
     # Symlink to linux for ease of use later
