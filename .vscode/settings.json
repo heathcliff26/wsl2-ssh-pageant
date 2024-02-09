@@ -1,0 +1,10 @@
+{
+  "go.vetFlags": [
+    "-unsafeptr=false"
+  ],
+  "gopls": {
+    "analyses": {
+      "unsafeptr": false
+    }
+  }
+}

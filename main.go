@@ -100,7 +100,8 @@ func queryPageant(buf []byte) (result []byte, err error) {
 		_ = windows.UnmapViewOfFile(sharedMemory)
 	}()
 
-	sharedMemoryArray := (*[agentMaxMessageLength]byte)(unsafe.Pointer(sharedMemory))
+	// Ignore vet warning "possible misuse of unsafe.Pointer". Shared memory should not be visible to garbage collector
+	sharedMemoryArray := unsafe.Slice((*byte)(unsafe.Pointer(sharedMemory)), agentMaxMessageLength)
 	copy(sharedMemoryArray[:], buf)
 
 	mapNameWithNul := mapName + "\000"
