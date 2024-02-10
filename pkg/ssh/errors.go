@@ -1,4 +1,4 @@
-package main
+package ssh
 
 import "fmt"
 
@@ -34,4 +34,18 @@ func NewErrWMCopydata() error {
 
 func (e ErrWMCopydata) Error() string {
 	return "WM_COPYDATA failed"
+}
+
+type ErrGPGAgentLaunch struct {
+	err error
+}
+
+func NewErrGPGAgentLaunch(err error) error {
+	return &ErrGPGAgentLaunch{
+		err: err,
+	}
+}
+
+func (e *ErrGPGAgentLaunch) Error() string {
+	return fmt.Sprintf("Failed to launch gpg-connect-agent: %v", e.err)
 }
