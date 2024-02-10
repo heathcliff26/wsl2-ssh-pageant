@@ -20,6 +20,8 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/ci.yaml
+    with:
+      release_version: "${{ inputs.version }}"
 
   release:
     runs-on: ubuntu-latest

@@ -8,12 +8,11 @@ import (
 
 	"github.com/heathcliff26/wsl2-ssh-pageant/pkg/gpg"
 	"github.com/heathcliff26/wsl2-ssh-pageant/pkg/ssh"
+	"github.com/heathcliff26/wsl2-ssh-pageant/pkg/version"
 	"github.com/spf13/cobra"
 )
 
 const (
-	ProgramName = "wsl2-ssh-pageant"
-
 	FlagNameLogfile  = "log-file"
 	FlagNameLogLevel = "log-level"
 
@@ -29,13 +28,13 @@ var (
 func NewRootCommand() *cobra.Command {
 	cobra.AddTemplateFunc(
 		"ProgramName", func() string {
-			return ProgramName
+			return version.Name
 		},
 	)
 
 	rootCmd := &cobra.Command{
-		Use:              ProgramName,
-		Short:            ProgramName + " allows using pageant inside WSL2 Distros as ssh-agent.",
+		Use:              version.Name,
+		Short:            version.Name + " allows using pageant inside WSL2 Distros as ssh-agent.",
 		PersistentPreRun: preRun,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Printf(cmd.UsageString())
@@ -47,13 +46,16 @@ func NewRootCommand() *cobra.Command {
 	rootCmd.PersistentFlags().String(FlagNameLogfile, DefaultLogFile, "Path to logfile")
 	rootCmd.PersistentFlags().String(FlagNameLogLevel, DefaultLogLevel, "Log level")
 
-	rootCmd.AddCommand(ssh.NewCommand())
-
 	gpgCommand, err := gpg.NewCommand()
 	if err != nil {
 		exitError(rootCmd, err)
 	}
-	rootCmd.AddCommand(gpgCommand)
+
+	rootCmd.AddCommand(
+		ssh.NewCommand(),
+		gpgCommand,
+		version.NewCommand(),
+	)
 
 	return rootCmd
 }
