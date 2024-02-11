@@ -114,6 +114,7 @@ func postRun() {
 			fmt.Printf("Failed to flush logfile: %v", err)
 		}
 		logFile.Close()
+		logFile = nil
 	}
 }
 
