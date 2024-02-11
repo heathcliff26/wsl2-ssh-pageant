@@ -36,8 +36,16 @@ func NewRootCommand() *cobra.Command {
 		Use:              version.Name,
 		Short:            version.Name + " allows using pageant inside WSL2 Distros as ssh-agent.",
 		PersistentPreRun: preRun,
+		FParseErrWhitelist: cobra.FParseErrWhitelist{
+			UnknownFlags: true,
+		},
 		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Printf(cmd.UsageString())
+			os.Args = append([]string{os.Args[0], ssh.CommandName}, os.Args[1:]...)
+			cmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {}
+			err := cmd.Execute()
+			if err != nil {
+				exitError(cmd, err)
+			}
 		},
 	}
 

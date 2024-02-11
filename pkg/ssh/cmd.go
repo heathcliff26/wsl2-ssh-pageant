@@ -8,13 +8,15 @@ import (
 )
 
 const (
+	CommandName = "ssh"
+
 	flagNamePipe = "pipe"
 )
 
 func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "ssh",
-		Short: "Connect Pageant to unix socket via socat",
+		Use:   CommandName,
+		Short: "Connect Pageant to unix socket via socat. (Default)",
 		Run: func(cmd *cobra.Command, args []string) {
 			pipe, err := cmd.Flags().GetString(flagNamePipe)
 			if err != nil {
