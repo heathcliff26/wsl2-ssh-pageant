@@ -1,0 +1,2 @@
+This is a test file with no specific content.
+Used to check the checksum mechanism. Should never have the same content as test.txt

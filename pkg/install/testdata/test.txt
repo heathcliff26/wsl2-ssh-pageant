@@ -1,0 +1,2 @@
+This is a test file with no specific content.
+Used to test the embedded binary mechanism.
