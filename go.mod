@@ -7,7 +7,7 @@ require (
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/sys v0.19.0
+	golang.org/x/sys v0.20.0
 )
 
 require (
