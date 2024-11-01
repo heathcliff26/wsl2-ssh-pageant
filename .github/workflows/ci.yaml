@@ -38,29 +38,21 @@ jobs:
       os: windows-latest
 
   build:
-    runs-on: ubuntu-latest
+    uses: heathcliff26/ci/.github/workflows/golang-build.yaml@main
     needs:
       - lint
       - unit-tests
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: Setup golang
-        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
-        with:
-          go-version: 'stable'
-          cache-dependency-path: go.sum
-
-      - name: Build Artifact
-        env:
-          RELEASE_VERSION: "${{ inputs.release_version }}"
-        run: hack/build.sh
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: "wsl2-ssh-pageant.exe"
-          path: "bin/wsl2-ssh-pageant.exe"
-          retention-days: 1
-          if-no-files-found: error
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+          - arch: arm64
+    with:
+      release: "${{ github.event_name == 'pull_request' && 'devel' || inputs.release_version == '' && 'rolling' || inputs.release_version }}"
+      goos: "windows"
+      goarch: "${{ matrix.arch }}"
+      artifact: "bin/wsl2-ssh-pageant-${{ matrix.arch }}.exe"
+      artifact-name: "wsl2-ssh-pageant-${{ matrix.arch }}"
+      cmd: "hack/build.sh wsl2-ssh-pageant-${{ matrix.arch }}"
+    secrets: inherit

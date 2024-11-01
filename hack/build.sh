@@ -17,8 +17,11 @@ if [ "${RELEASE_VERSION}" != "" ]; then
 fi
 
 output_name="${bin_dir}/wsl2-ssh-pageant.exe"
+if [ "${1}" != "" ]; then
+    output_name="${bin_dir}/${1}.exe"
+fi
 
 pushd "${base_dir}" >/dev/null
 
 echo "Building $(basename "${output_name}")"
-GOOS="${GOOS}" GOARCH="${GOARCH}" go build -ldflags="${GO_LD_FLAGS}" -o "${output_name}" ./cmd/...
+GOOS="${GOOS}" GOARCH="${GOARCH}" CGO_ENABLED=0 go build -ldflags="${GO_LD_FLAGS}" -o "${output_name}" ./cmd/...
