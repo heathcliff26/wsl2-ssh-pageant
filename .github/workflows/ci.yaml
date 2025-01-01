@@ -37,6 +37,12 @@ jobs:
     with:
       os: windows-latest
 
+  validate:
+    uses: heathcliff26/ci/.github/workflows/golang-build.yaml@main
+    with:
+      cache: false
+      cmd: "make validate"
+
   build:
     uses: heathcliff26/ci/.github/workflows/golang-build.yaml@main
     needs:
