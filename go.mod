@@ -1,6 +1,6 @@
 module github.com/heathcliff26/wsl2-ssh-pageant
 
-go 1.21
+go 1.22.0
 
 require (
 	github.com/Microsoft/go-winio v0.6.2
