@@ -11,6 +11,12 @@ test:
 lint:
 	golangci-lint run -v
 
+fmt:
+	gofmt -s -w ./cmd ./pkg
+
+validate:
+	hack/validate.sh
+
 coverprofile:
 	hack/coverprofile.sh
 
@@ -25,6 +31,8 @@ listen: build
 	build \
 	test \
 	lint \
+	fmt \
+	validate \
 	coverprofile \
 	dependencies \
 	listen \
