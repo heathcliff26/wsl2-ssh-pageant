@@ -1,7 +1,6 @@
 package version
 
 import (
-	"fmt"
 	"runtime"
 	"runtime/debug"
 
@@ -10,14 +9,13 @@ import (
 
 const Name = "wsl2-ssh-pageant"
 
-var version = "devel"
-
+// Create a new version command with the given app name
 func NewCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: "Print version information and exit",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Print(Version())
+			cmd.Print(VersionInfoString())
 		},
 	}
 	// Override to prevent parent function from running
@@ -26,7 +24,14 @@ func NewCommand() *cobra.Command {
 	return cmd
 }
 
+// Return the version string
 func Version() string {
+	buildinfo, _ := debug.ReadBuildInfo()
+	return buildinfo.Main.Version
+}
+
+// Return a formated string containing the version, git commit and go version the app was compiled with.
+func VersionInfoString() string {
 	var commit string
 	buildinfo, _ := debug.ReadBuildInfo()
 	for _, item := range buildinfo.Settings {
@@ -42,7 +47,7 @@ func Version() string {
 	}
 
 	result := Name + ":\n"
-	result += "    Version: " + version + "\n"
+	result += "    Version: " + buildinfo.Main.Version + "\n"
 	result += "    Commit:  " + commit + "\n"
 	result += "    Go:      " + runtime.Version() + "\n"
 
