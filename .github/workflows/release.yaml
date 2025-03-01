@@ -20,6 +20,9 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/ci.yaml
+    permissions:
+      contents: read
+      packages: write
     with:
       release_version: "${{ inputs.version }}"
 

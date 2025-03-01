@@ -29,16 +29,22 @@ on:
 jobs:
   lint:
     uses: heathcliff26/ci/.github/workflows/golang-lint.yaml@main
+    permissions:
+      contents: read
     with:
       os: windows-latest
 
   unit-tests:
     uses: heathcliff26/ci/.github/workflows/golang-unit-tests.yaml@main
+    permissions:
+      contents: read
     with:
       os: windows-latest
 
   validate:
     uses: heathcliff26/ci/.github/workflows/golang-build.yaml@main
+    permissions:
+      contents: read
     with:
       cache: false
       cmd: "make validate"
@@ -48,6 +54,8 @@ jobs:
     needs:
       - lint
       - unit-tests
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
