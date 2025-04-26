@@ -34,6 +34,14 @@ dependencies:
 listen: build
 	socat UNIX-LISTEN:ssh.sock,fork EXEC:bin/wsl2-ssh-pageant.exe
 
+# Scan code for vulnerabilities using gosec
+gosec:
+	gosec ./...
+
+# Clean up build artifacts
+clean:
+	rm -rf bin coverprofiles ssh.sock
+
 # Show this help message
 help:
 	@echo "Available targets:"
@@ -52,5 +60,7 @@ help:
 	coverprofile \
 	dependencies \
 	listen \
+	gosec \
+	clean \
 	help \
 	$(NULL)
