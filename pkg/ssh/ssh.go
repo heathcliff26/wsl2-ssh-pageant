@@ -38,6 +38,7 @@ type copyDataStruct struct {
 	lpData uintptr
 }
 
+// #nosec G103: Using unsafe here to write to shared memory
 func queryPageant(buf []byte) (result []byte, err error) {
 	if len(buf) > agentMaxMessageLength {
 		err = NewErrMessageLength(len(buf))

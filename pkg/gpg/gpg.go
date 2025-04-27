@@ -14,6 +14,7 @@ func handleGPG(path string) {
 	var port int
 	var nonce [16]byte
 
+	// #nosec G304: It is the users responsibility to ensure that the gpg socket is secure.
 	file, err := os.Open(path)
 	if err != nil {
 		slog.Error("Failed to open gpg directory", "err", err)
