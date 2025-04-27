@@ -84,6 +84,7 @@ func preRun(cmd *cobra.Command, args []string) {
 	if err != nil {
 		exitError(cmd, err)
 	}
+	// #nosec G302,G304: Local users can freely decide the log file location. Final file permissions should be decided by umask.
 	f, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		exitError(cmd, err)
@@ -113,7 +114,10 @@ func postRun() {
 		if err != nil {
 			fmt.Printf("Failed to flush logfile: %v", err)
 		}
-		logFile.Close()
+		err = logFile.Close()
+		if err != nil {
+			fmt.Printf("Failed to close logfile: %v", err)
+		}
 		logFile = nil
 	}
 }
