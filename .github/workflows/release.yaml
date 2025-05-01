@@ -23,6 +23,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     with:
       release_version: "${{ inputs.version }}"
 
