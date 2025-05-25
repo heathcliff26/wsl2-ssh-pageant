@@ -16,10 +16,23 @@ on:
         description: "Update existing release"
         type: boolean
         default: false
+      prerelease:
+        description: "Mark the release as a prerelease"
+        type: boolean
+        default: false
 
 jobs:
+  tag:
+    uses: heathcliff26/ci/.github/workflows/tag.yaml@main
+    permissions:
+      contents: write
+    with:
+      tag: ${{ inputs.version }}
+      overwrite: ${{ inputs.update }}
+
   build:
     uses: ./.github/workflows/ci.yaml
+    needs: tag
     permissions:
       contents: read
       packages: write
@@ -38,3 +51,4 @@ jobs:
       tag: ${{ inputs.version }}
       release-artifacts: "release/*"
       artifacts: "wsl2-ssh-pageant-*"
+      prerelease: ${{ inputs.prerelease }}
