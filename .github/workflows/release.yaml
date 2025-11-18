@@ -52,3 +52,4 @@ jobs:
       release-artifacts: "release/*"
       artifacts: "wsl2-ssh-pageant-*"
       prerelease: ${{ inputs.prerelease }}
+    secrets: inherit
